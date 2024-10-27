@@ -1,0 +1,60 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-stone-900">Playlists</h1>
+    <%= link_to 'New Playlist', new_playlist_path, 
+                class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <% @playlists.each do |playlist| %>
+      <div class="overflow-hidden bg-white rounded-lg shadow-lg">
+        <div class="p-6">
+          <div class="flex justify-between items-start">
+            <div>
+              <h2 class="text-xl font-semibold text-stone-900">
+                <%= link_to playlist.name, playlist_path(playlist), class: "hover:text-indigo-600" %>
+              </h2>
+              <p class="mt-1 text-stone-500"><%= pluralize(playlist.tracks.count, 'track') %></p>
+            </div>
+            
+            <div class="relative">
+              <button data-dropdown-toggle="dropdown-<%= playlist.id %>" class="text-stone-400 hover:text-stone-600">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+                </svg>
+              </button>
+
+              <div id="dropdown-<%= playlist.id %>" data-dropdown class="hidden absolute right-0 z-50 mt-2 w-48 bg-white rounded-md ring-1 ring-black ring-opacity-5 shadow-lg">
+                <div class="py-1">
+                  <%= link_to 'View', playlist_path(playlist), class: "block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100" %>
+                  <%= link_to 'Edit', edit_playlist_path(playlist), class: "block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100" %>
+                  <% if playlist.tracks.empty? %>
+                    <%= button_to playlist_path(playlist), 
+                                method: :delete,
+                                class: "w-full text-left",
+                                data: { confirm: "Are you sure you want to delete this playlist?" } do %>
+                      <span class="block px-4 py-2 text-sm text-red-600 hover:bg-stone-100">Delete</span>
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <% if playlist.tracks.any? %>
+            <div class="mt-4 space-y-2">
+              <h3 class="text-sm font-medium text-stone-700">Recent tracks:</h3>
+              <% playlist.tracks.order(created_at: :desc).limit(3).each do |track| %>
+                <div class="text-sm text-stone-600">
+                  <%= track.artist %> - <%= track.track_title %>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="mt-4 text-sm italic text-stone-500">No tracks yet</p>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

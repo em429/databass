@@ -1,0 +1,17 @@
+<div class="space-y-6">
+  <%= render 'shared/sort_controls', 
+             tracks: @tracks,
+             title: 'All Tracks',
+             sort_by: @sort_by,
+             sort_direction: @sort_direction %>
+
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <% @tracks.each do |track| %>
+      <%= render 'shared/track_card', track: track %>
+    <% end %>
+  </div>
+
+  <div class="flex justify-center mt-6">
+    <%= paginate @tracks, window: 2 %>
+  </div>
+</div>

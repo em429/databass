@@ -1,0 +1,40 @@
+<div class="overflow-hidden bg-white rounded-lg shadow-lg">
+  <div class="aspect-w-16 aspect-h-9 bg-stone-100">
+    <div class="flex justify-center items-center">
+      <svg class="w-16 h-16 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+      </svg>
+    </div>
+  </div>
+  <div class="p-4">
+    <h3 class="text-lg font-semibold truncate text-stone-900"><%= track.track_title %></h3>
+    <p class="truncate text-stone-600"><%= track.artist %></p>
+    
+    <div class="flex justify-between items-center mt-4">
+      <span class="text-sm text-stone-500"><%= track.created_at.strftime('%Y-%m-%d') %></span>
+      
+      <div class="relative">
+        <button data-dropdown-toggle="dropdown-<%= track.id %>" class="text-stone-400 hover:text-stone-600">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+          </svg>
+        </button>
+
+        <div id="dropdown-<%= track.id %>" data-dropdown class="hidden absolute right-0 z-50 mt-2 w-48 bg-white rounded-md ring-1 ring-black ring-opacity-5 shadow-lg">
+          <div class="py-1">
+            <%= link_to 'View Details', track_path(track), class: "block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100" %>
+            <%= link_to 'Edit', edit_track_path(track), class: "block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100" %>
+            <%= button_to track_path(track), method: :delete, class: "w-full text-left", data: { confirm: "Are you sure you want to remove this track?" } do %>
+              <span class="block px-4 py-2 text-sm text-red-600 hover:bg-stone-100">Remove</span>
+            <% end %>
+            <%= button_to toggle_favorite_track_path(track), method: :patch, class: "w-full text-left" do %>
+              <span class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">
+                <%= track.favorite ? 'Remove from Favorites' : 'Add to Favorites' %>
+              </span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
