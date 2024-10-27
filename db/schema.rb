@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_27_132709) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_27_134306) do
   create_table "playlist_tracks", force: :cascade do |t|
     t.integer "track_id", null: false
     t.integer "playlist_id", null: false
@@ -24,6 +24,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_27_132709) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_playlists_on_name", unique: true
   end
 
   create_table "tracks", force: :cascade do |t|
