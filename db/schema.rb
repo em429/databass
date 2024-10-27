@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_10_26_231529) do
+ActiveRecord::Schema[8.0].define(version: 2024_10_27_132709) do
   create_table "playlist_tracks", force: :cascade do |t|
     t.integer "track_id", null: false
     t.integer "playlist_id", null: false
@@ -34,6 +34,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_10_26_231529) do
     t.boolean "favorite"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["artist", "track_title"], name: "index_tracks_on_artist_and_track_title", unique: true
   end
 
   add_foreign_key "playlist_tracks", "playlists"

@@ -16,6 +16,14 @@ class TracksController < ApplicationController
   end
 
   def create
+    # Check if track already exists
+    existing_track = Track.find_by(artist: track_params[:artist], track_title: track_params[:track_title])
+    
+    if existing_track
+      redirect_to existing_track, notice: 'This track already exists in the database.'
+      return
+    end
+
     @track = Track.new(track_params)
     
     if @track.save
@@ -29,6 +37,15 @@ class TracksController < ApplicationController
   end
 
   def update
+    # Check if update would create a duplicate
+    existing_track = Track.where.not(id: @track.id)
+                        .find_by(artist: track_params[:artist], track_title: track_params[:track_title])
+    
+    if existing_track
+      redirect_to existing_track, notice: 'A track with this artist and title already exists.'
+      return
+    end
+
     if @track.update(track_params)
       redirect_to @track, notice: 'Track was successfully updated.'
     else

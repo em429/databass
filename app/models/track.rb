@@ -4,6 +4,7 @@ class Track < ApplicationRecord
 
   validates :artist, presence: true
   validates :track_title, presence: true
+  validates :track_title, uniqueness: { scope: :artist, message: "already exists for this artist" }
   
   before_create :set_default_values
 
