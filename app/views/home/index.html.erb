@@ -1,6 +1,6 @@
 <div class="space-y-8">
   <% if @random_track %>
-    <div class="overflow-hidden bg-white rounded-lg shadow-lg">
+    <div class="overflow-hidden bg-white rounded-lg shadow">
       <div class="p-6 space-y-4">
         <h2 class="text-2xl font-bold text-stone-900">Random Track</h2>
         <div class="rounded-lg aspect-w-16 aspect-h-9 bg-stone-100">
@@ -35,7 +35,7 @@
   <% end %>
 
   <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
-    <div class="overflow-hidden bg-white rounded-lg shadow-lg">
+    <div class="overflow-hidden bg-white rounded-lg shadow">
       <div class="p-6">
         <h2 class="mb-4 text-xl font-bold text-stone-900">Add New Track</h2>
         <%= form_with(model: @track, local: true, class: "space-y-4") do |f| %>
@@ -59,7 +59,7 @@
       </div>
     </div>
 
-    <div class="overflow-hidden bg-white rounded-lg shadow-lg">
+    <div class="overflow-hidden bg-white rounded-lg shadow">
       <div class="p-6">
         <h2 class="mb-4 text-xl font-bold text-stone-900">Create New Playlist</h2>
         <%= form_with(model: @playlist, local: true, class: "space-y-4") do |f| %>
