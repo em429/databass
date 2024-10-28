@@ -77,34 +77,6 @@
         }
       }
     });
-
-    // Function to handle dropdowns
-    document.addEventListener('click', function(event) {
-      if (event.target.closest('[data-dropdown-toggle]')) {
-        const button = event.target.closest('[data-dropdown-toggle]');
-        const dropdownId = button.dataset.dropdownToggle;
-        const dropdown = document.getElementById(dropdownId);
-        
-        // Close all other dropdowns
-        document.querySelectorAll('[data-dropdown]').forEach(d => {
-          if (d.id !== dropdownId) {
-            d.classList.add('hidden');
-          }
-        });
-        
-        dropdown.classList.toggle('hidden');
-        event.stopPropagation();
-      }
-    });
-
-    // Close dropdowns when clicking outside
-    document.addEventListener('click', function(event) {
-      if (!event.target.closest('[data-dropdown]') && !event.target.closest('[data-dropdown-toggle]')) {
-        document.querySelectorAll('[data-dropdown]').forEach(dropdown => {
-          dropdown.classList.add('hidden');
-        });
-      }
-    });
   </script>
 </body>
 </html>

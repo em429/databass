@@ -7,14 +7,14 @@
     <div class="flex justify-between items-center mt-4">
       <span class="text-sm text-stone-500"><%= track.created_at.strftime('%Y-%m-%d') %></span>
       
-      <div class="relative">
-        <button data-dropdown-toggle="dropdown-<%= track.id %>" class="text-stone-400 hover:text-stone-600">
+      <div class="relative" data-controller="dropdown">
+        <button data-action="dropdown#toggle" class="text-stone-400 hover:text-stone-600">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
           </svg>
         </button>
 
-        <div id="dropdown-<%= track.id %>" data-dropdown class="hidden absolute right-0 z-50 mt-2 w-48 bg-white rounded-md ring-1 ring-black ring-opacity-5 shadow">
+        <div data-dropdown-target="menu" class="hidden absolute right-0 z-50 mt-2 w-48 bg-white rounded-md ring-1 ring-black ring-opacity-5 shadow">
           <div class="py-1">
             <%= link_to 'View Details', track_path(track), class: "block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100" %>
             <%= link_to 'Edit', edit_track_path(track), class: "block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100" %>
