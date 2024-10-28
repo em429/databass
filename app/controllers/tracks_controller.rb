@@ -1,5 +1,4 @@
 class TracksController < ApplicationController
-  before_action :set_track, only: %i[show edit update destroy increment_play_count]
 
   def index
     @tracks = Track.all
@@ -9,6 +8,7 @@ class TracksController < ApplicationController
 
   def show
     @playlists = Playlist.all
+    @track = Track.find(params[:id])
   end
 
   def new
@@ -16,6 +16,7 @@ class TracksController < ApplicationController
   end
 
   def edit
+    @track = Track.find(params[:id])
   end
 
   def create
@@ -37,6 +38,7 @@ class TracksController < ApplicationController
   end
 
   def update
+    @track = Track.find(params[:id])
     # Check if update would create a duplicate
     existing_track = Track.where.not(id: @track.id)
                         .find_by(artist: track_params[:artist], track_title: track_params[:track_title])
@@ -54,6 +56,7 @@ class TracksController < ApplicationController
   end
 
   def destroy
+    @track = Track.find(params[:id])
     if @track.destroy
       redirect_to tracks_url, notice: "Track was successfully removed."
     else
@@ -62,11 +65,13 @@ class TracksController < ApplicationController
   end
 
   def increment_play_count
+    @track = Track.find(params[:id])
     @track.increment!(:play_count)
     render json: { success: true, play_count: @track.play_count }
   end
 
   def toggle_favorite
+    @track = Track.find(params[:id])
     @track.update(favorite: !@track.favorite)
     redirect_back(fallback_location: tracks_path)
   end
