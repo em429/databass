@@ -1,5 +1,5 @@
 class TracksController < ApplicationController
-  before_action :set_track, only: [:show, :edit, :update, :destroy, :toggle_favorite]
+  before_action :set_track, only: %i[show edit update destroy increment_play_count]
 
   def index
     @tracks = Track.all
@@ -15,25 +15,25 @@ class TracksController < ApplicationController
     @track = Track.new
   end
 
+  def edit
+  end
+
   def create
     # Check if track already exists
     existing_track = Track.find_by(artist: track_params[:artist], track_title: track_params[:track_title])
     
     if existing_track
-      redirect_to existing_track, notice: 'This track already exists in the database.'
+      redirect_to existing_track, notice: "This track already exists in the database."
       return
     end
 
     @track = Track.new(track_params)
     
     if @track.save
-      redirect_to @track, notice: 'Track was successfully created.'
+      redirect_to @track, notice: "Track was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
-  end
-
-  def edit
   end
 
   def update
@@ -42,12 +42,12 @@ class TracksController < ApplicationController
                         .find_by(artist: track_params[:artist], track_title: track_params[:track_title])
     
     if existing_track
-      redirect_to existing_track, notice: 'A track with this artist and title already exists.'
+      redirect_to existing_track, notice: "A track with this artist and title already exists."
       return
     end
 
     if @track.update(track_params)
-      redirect_to @track, notice: 'Track was successfully updated.'
+      redirect_to @track, notice: "Track was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -55,10 +55,15 @@ class TracksController < ApplicationController
 
   def destroy
     if @track.destroy
-      redirect_to tracks_url, notice: 'Track was successfully removed.'
+      redirect_to tracks_url, notice: "Track was successfully removed."
     else
-      redirect_to tracks_url, alert: 'Unable to remove track.'
+      redirect_to tracks_url, alert: "Unable to remove track."
     end
+  end
+
+  def increment_play_count
+    @track.increment!(:play_count)
+    render json: { success: true, play_count: @track.play_count }
   end
 
   def toggle_favorite
@@ -68,7 +73,7 @@ class TracksController < ApplicationController
 
   def search
     query = params[:q].to_s.downcase
-    @tracks = Track.where('lower(artist) LIKE ? OR lower(track_title) LIKE ?', 
+    @tracks = Track.where("lower(artist) LIKE ? OR lower(track_title) LIKE ?", 
                          "%#{query}%", "%#{query}%")
     
     if params[:playlist_id].present?

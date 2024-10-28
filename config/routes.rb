@@ -1,9 +1,10 @@
 Rails.application.routes.draw do
-  root 'home#index'
+  root "home#index"
   
   resources :tracks do
     member do
       patch :toggle_favorite
+      post :increment_play_count
     end
   end
   

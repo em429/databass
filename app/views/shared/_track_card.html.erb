@@ -1,9 +1,26 @@
-<div class="bg-white rounded-lg shadow">
-  <div class="aspect-w-16 aspect-h-9 bg-stone-100">
-    <div class="flex justify-center items-center">
-      <svg class="w-16 h-16 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
-      </svg>
+<div class="bg-white rounded-lg shadow" data-controller="youtube">
+  <div class="relative">
+    <% youtube_id = track.youtube_url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^?&]+)/)&.captures&.first %>
+    <img
+      src="https://img.youtube.com/vi/<%= youtube_id %>/0.jpg"
+      alt="<%= track.track_title %>"
+      class="object-cover w-full rounded-t-lg cursor-pointer aspect-video"
+      data-action="click->youtube#playAudio"
+      data-youtube-url="<%= track.youtube_url %>"
+      data-youtube-target="thumbnail"
+    />
+    <div id="player-<%= youtube_id %>" data-track-id="<%= track.id %>" data-youtube-target="player"></div>
+    <% if track.play_count && track.play_count > 0 %>
+      <div id="play-count-<%= track.id %>" class="absolute top-2 right-2 px-2 py-1 rounded-md opacity-80 bg-stone-800 text-stone-50" data-youtube-target="playCount">
+        <%= track.play_count %>
+      </div>
+    <% end %>
+    <div class="absolute right-0 bottom-0 left-0 h-1 bg-stone-200">
+      <div
+        id="progress-<%= youtube_id %>"
+        class="w-0 h-full bg-indigo-500"
+        data-youtube-target="progress"
+      ></div>
     </div>
   </div>
   <div class="p-4">
