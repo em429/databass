@@ -94,7 +94,7 @@ class TracksController < ApplicationController
   end
 
   def track_params
-    params.require(:track).permit(:artist, :track_title, :youtube_url)
+    params.require(:track).permit(:artist, :track_title, :youtube_id)
   end
 
   def apply_sorting

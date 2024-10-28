@@ -3,13 +3,13 @@
 one:
   artist: MyString
   track_title: MyString
-  youtube_url: MyString
+  youtube_id: MyString
   play_count: 1
   favorite: false
 
 two:
   artist: MyString
   track_title: MyString
-  youtube_url: MyString
+  youtube_id: MyString
   play_count: 1
   favorite: false
