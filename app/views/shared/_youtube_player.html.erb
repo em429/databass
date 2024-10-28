@@ -1,0 +1,23 @@
+<div class="relative" data-controller="youtube">
+  <img
+    src="https://img.youtube.com/vi/<%= track.youtube_id %>/0.jpg"
+    alt="<%= track.track_title %>"
+    class="object-cover w-full rounded-t-lg cursor-pointer aspect-video"
+    data-action="click->youtube#playAudio"
+    data-youtube-url="https://www.youtube.com/watch?v=<%= track.youtube_id %>"
+    data-youtube-target="thumbnail"
+  />
+  <div id="player-<%= track.youtube_id %>" data-track-id="<%= track.id %>" data-youtube-target="player"></div>
+  <% if track.play_count && track.play_count > 0 %>
+    <div id="play-count-<%= track.id %>" class="absolute top-2 right-2 px-2 py-1 rounded-md opacity-80 bg-stone-800 text-stone-50" data-youtube-target="playCount">
+      <%= track.play_count %>
+    </div>
+  <% end %>
+  <div class="absolute right-0 bottom-0 left-0 h-1 bg-stone-200">
+    <div
+      id="progress-<%= track.youtube_id %>"
+      class="w-0 h-full bg-indigo-500"
+      data-youtube-target="progress"
+    ></div>
+  </div>
+</div>
