@@ -1,0 +1,143 @@
+#!/usr/bin/env ruby
+require_relative '../bundle/bundler/setup'
+require 'active_record'
+require 'thor'
+require 'httparty'
+require 'uri'
+# require open3
+# try gem nokogiri in gemfile if error
+
+
+unless ENV['DATABASS_DB_PATH']
+  puts "Error: DATABASS_DB_PATH environment variable not set"
+  puts "Please set it to your database location:"
+  puts "export DATABASS_DB_PATH=/path/to/your/db/database.sqlite3"
+  exit 1
+end
+
+unless File.exist?(ENV['DATABASS_DB_PATH'])
+  puts "Error: Database file not found at #{ENV['DATABASS_DB_PATH']}"
+  exit 1
+end
+
+ActiveRecord::Base.establish_connection(
+  adapter: 'sqlite3',
+  database: ENV['DATABASS_DB_PATH']
+)
+
+
+# Models
+class Track < ActiveRecord::Base
+  has_many :playlist_tracks
+  has_many :playlists, through: :playlist_tracks
+  validates :artist, :track_title, presence: true
+  validates :artist, uniqueness: { scope: :track_title }
+end
+
+class Playlist < ActiveRecord::Base
+  has_many :playlist_tracks
+  has_many :tracks, through: :playlist_tracks
+  validates :name, presence: true, uniqueness: true
+end
+
+class PlaylistTrack < ActiveRecord::Base
+  belongs_to :track
+  belongs_to :playlist
+end
+
+class PlaylistCLI < Thor
+  desc "save ARTIST TITLE PLAYLIST", "Save a track to a playlist"
+  def save(artist, title, playlist_name)
+    # Find or create playlist
+    playlist = Playlist.find_or_create_by!(name: playlist_name)
+
+    # Check if track exists
+    existing_track = Track.find_by(artist: artist, track_title: title)
+
+    if existing_track
+      puts "Track already exists:"
+      puts "Artist: #{existing_track.artist}"
+      puts "Title: #{existing_track.track_title}"
+      if existing_track.youtube_id
+        puts "YouTube: https://www.youtube.com/watch?v=#{existing_track.youtube_id}"
+      end
+      puts "Created at: #{existing_track.created_at}"
+      return
+    end
+
+    # Search YouTube
+    youtube_id = fetch_youtube_id("#{artist} - #{title}")
+
+    # Create track
+    track = Track.create!(
+      artist: artist,
+      track_title: title,
+      youtube_id: youtube_id,
+      play_count: 0,
+      favorite: false
+    )
+
+    # Associate track with playlist
+    PlaylistTrack.create!(track: track, playlist: playlist)
+
+    puts "Track saved successfully!"
+    puts "YouTube ID: #{youtube_id}" if youtube_id
+  end
+
+  desc "play PLAYLIST", "Play a playlist using mpv"
+  def play(playlist_name)
+    playlist = Playlist.find_by!(name: playlist_name)
+    tracks = playlist.tracks.where.not(youtube_id: nil)
+
+    if tracks.empty?
+      puts "No playable tracks found in playlist"
+      return
+    end
+
+    urls = tracks.map { |t| "https://www.youtube.com/watch?v=#{t.youtube_id}" }
+
+    cmd = [
+      "mpv",
+      "--no-video",
+      "--osd-level=3",
+      "--force-window=no",
+      "--osd-duration=99999",
+      "--term-osd-bar",
+      "--term-osd=force",
+      "--term-playing-msg=${playlist-pos-1}/${playlist-count} - ${media-title}",
+      *urls
+    ]
+
+    system(*cmd)
+  end
+
+  desc "ls", "List all playlists"
+  def ls
+    Playlist.all.each do |playlist|
+      track_count = playlist.tracks.count
+      puts "#{playlist.name} (#{track_count} tracks)"
+    end
+  end
+
+  private
+
+  def fetch_youtube_id(query)
+    encoded_query = URI.encode_www_form_component(query)
+    url = "https://www.youtube.com/results?search_query=#{encoded_query}"
+
+    begin
+      response = HTTParty.get(url, headers: { "User-Agent" => "Mozilla/5.0" })
+
+      # Extract video ID from response
+      if response.body =~ /\/watch\?v=([a-zA-Z0-9_-]{11})/
+        return $1
+      end
+    rescue => e
+      puts "Warning: Could not fetch YouTube ID: #{e.message}"
+    end
+
+    nil
+  end
+end
+
+PlaylistCLI.start(ARGV)
