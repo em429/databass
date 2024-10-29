@@ -1,4 +1,5 @@
 class TracksController < ApplicationController
+  include ActionView::RecordIdentifier
 
   def index
     @tracks = Track.all
@@ -58,7 +59,10 @@ class TracksController < ApplicationController
   def destroy
     @track = Track.find(params[:id])
     if @track.destroy
-      redirect_to tracks_url, notice: "Track was successfully removed."
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.remove(dom_id(@track)) }
+        format.html { redirect_to tracks_url, notice: "Track was successfully removed." }
+      end
     else
       redirect_to tracks_url, alert: "Unable to remove track."
     end

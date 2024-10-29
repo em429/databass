@@ -7,7 +7,8 @@
 
   <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
     <% @tracks.each do |track| %>
-      <div class="relative">
+      <% playlist_track = @playlist.playlist_tracks.find_by(track: track) %>
+      <div class="relative" id="<%= dom_id(playlist_track) %>">
         <%= render 'shared/track_card', track: track %>
         <div data-controller="confirmation">
           <%= link_to playlist_playlist_track_path(@playlist, track), 
