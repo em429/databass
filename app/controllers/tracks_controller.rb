@@ -23,14 +23,14 @@ class TracksController < ApplicationController
   def create
     # Check if track already exists
     existing_track = Track.find_by(artist: track_params[:artist], track_title: track_params[:track_title])
-    
+
     if existing_track
       redirect_to existing_track, notice: "This track already exists in the database."
       return
     end
 
     @track = Track.new(track_params)
-    
+
     if @track.save
       redirect_to @track, notice: "Track was successfully created."
     else
@@ -43,7 +43,7 @@ class TracksController < ApplicationController
     # Check if update would create a duplicate
     existing_track = Track.where.not(id: @track.id)
                         .find_by(artist: track_params[:artist], track_title: track_params[:track_title])
-    
+
     if existing_track
       redirect_to existing_track, notice: "A track with this artist and title already exists."
       return
@@ -82,15 +82,15 @@ class TracksController < ApplicationController
 
   def search
     query = params[:q].to_s.downcase
-    @tracks = Track.where("lower(artist) LIKE ? OR lower(track_title) LIKE ?", 
+    @tracks = Track.where("lower(artist) LIKE ? OR lower(track_title) LIKE ?",
                          "%#{query}%", "%#{query}%")
-    
+
     if params[:playlist_id].present?
       @playlist = Playlist.find(params[:playlist_id])
       @tracks = @tracks.joins(:playlist_tracks)
                       .where(playlist_tracks: { playlist_id: @playlist.id })
     end
-    
+
     apply_sorting
     @tracks = @tracks.page(params[:page]).per(15)
     render :index
@@ -108,19 +108,19 @@ class TracksController < ApplicationController
 
   def apply_sorting
     @sort_by = params[:sort_by]
-    @sort_direction = params[:sort_direction] == 'desc' ? 'desc' : 'asc'
+    @sort_direction = params[:sort_direction] == "desc" ? "desc" : "asc"
 
     case @sort_by
-    when 'artist'
+    when "artist"
       @tracks = @tracks.order(artist: @sort_direction)
-    when 'title'
+    when "title"
       @tracks = @tracks.order(track_title: @sort_direction)
-    when 'date'
+    when "date"
       @tracks = @tracks.order(created_at: @sort_direction)
-    when 'play_count'
+    when "play_count"
       @tracks = @tracks.order(play_count: @sort_direction)
-    when 'random'
-      @tracks = @tracks.order('RANDOM()')
+    when "random"
+      @tracks = @tracks.order("RANDOM()")
     else
       @tracks = @tracks.order(created_at: :desc)
     end
