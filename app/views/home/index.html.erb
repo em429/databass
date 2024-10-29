@@ -1,9 +1,8 @@
 <div class="space-y-8">
   <% if @random_track %>
     <div class="overflow-hidden bg-white rounded-lg shadow">
+      <%= render 'shared/youtube_player', track: @random_track %>
       <div class="p-6 space-y-4">
-        <h2 class="text-2xl font-bold text-stone-900">Random Track</h2>
-        <%= render 'shared/youtube_player', track: @random_track %>
         <div class="mt-4">
           <h3 class="text-xl font-semibold text-stone-900"><%= @random_track.track_title %></h3>
           <p class="text-stone-600"><%= @random_track.artist %></p>
