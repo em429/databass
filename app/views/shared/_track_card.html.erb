@@ -15,23 +15,17 @@
         </button>
 
         <div data-dropdown-target="menu" class="hidden absolute right-0 z-50 mt-2 w-48 bg-white rounded-md ring-1 ring-black ring-opacity-5 shadow">
-          <div class="py-1" data-controller="confirmation">
+          <div class="py-1">
             <%= link_to 'View Details', track_path(track), class: "block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100" %>
             <%= link_to 'Edit', edit_track_path(track), class: "block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100" %>
-            <%= link_to track_path(track),
+            <%= link_to 'Remove', track_path(track),
                 class: "block px-4 py-2 text-sm text-red-600 hover:bg-stone-100 w-full text-left",
-                data: {
-                  action: "click->confirmation#showModal",
-                  confirm_message: "Are you sure you want to remove '#{track.track_title}'? This cannot be undone."
-                } do %>
-              Remove
-            <% end %>
+                data: { turbo_method: "delete", turbo_confirm: "Are you sure?" } %>
             <%= button_to toggle_favorite_track_path(track), method: :patch, class: "w-full text-left" do %>
               <span class="block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100">
                 <%= track.favorite ? 'Remove from Favorites' : 'Add to Favorites' %>
               </span>
             <% end %>
-            <%= render "shared/confirmation_modal" %>
           </div>
         </div>
       </div>
