@@ -17,14 +17,14 @@
               <p class="mt-1 text-stone-500 dark:text-stone-400"><%= pluralize(playlist.tracks.count, 'track') %></p>
             </div>
             
-            <div class="relative">
-              <button data-dropdown-toggle="dropdown-<%= playlist.id %>" class="text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300">
+            <div class="relative" data-controller="dropdown">
+              <button data-action="dropdown#toggle" class="text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
                 </svg>
               </button>
 
-              <div id="dropdown-<%= playlist.id %>" data-dropdown class="hidden absolute right-0 z-50 mt-2 w-48 bg-white rounded-md ring-1 ring-black ring-opacity-5 shadow dark:bg-stone-700">
+              <div data-dropdown-target="menu" class="hidden absolute right-0 z-50 mt-2 w-48 bg-white rounded-md ring-1 ring-black ring-opacity-5 shadow dark:bg-stone-700">
                 <div class="py-1">
                   <%= link_to 'View', playlist_path(playlist), class: "block px-4 py-2 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-600" %>
                   <%= link_to 'Edit', edit_playlist_path(playlist), class: "block px-4 py-2 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-600" %>
