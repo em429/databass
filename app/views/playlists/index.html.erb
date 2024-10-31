@@ -1,39 +1,39 @@
 <div class="space-y-6">
   <div class="flex justify-between items-center">
-    <h1 class="text-2xl font-bold text-stone-900">Playlists</h1>
+    <h1 class="text-2xl font-bold text-stone-900 dark:text-stone-100">Playlists</h1>
     <%= link_to 'New Playlist', new_playlist_path, 
-                class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+                class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus:ring-indigo-400" %>
   </div>
 
   <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
     <% @playlists.each do |playlist| %>
-      <div class="bg-white rounded-lg shadow">
+      <div class="bg-white rounded-lg shadow dark:bg-stone-800">
         <div class="p-6">
           <div class="flex justify-between items-start">
             <div>
-              <h2 class="text-xl font-semibold text-stone-900">
-                <%= link_to playlist.name, playlist_path(playlist), class: "hover:text-indigo-600" %>
+              <h2 class="text-xl font-semibold text-stone-900 dark:text-stone-100">
+                <%= link_to playlist.name, playlist_path(playlist), class: "hover:text-indigo-600 dark:hover:text-indigo-400" %>
               </h2>
-              <p class="mt-1 text-stone-500"><%= pluralize(playlist.tracks.count, 'track') %></p>
+              <p class="mt-1 text-stone-500 dark:text-stone-400"><%= pluralize(playlist.tracks.count, 'track') %></p>
             </div>
             
             <div class="relative">
-              <button data-dropdown-toggle="dropdown-<%= playlist.id %>" class="text-stone-400 hover:text-stone-600">
+              <button data-dropdown-toggle="dropdown-<%= playlist.id %>" class="text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
                 </svg>
               </button>
 
-              <div id="dropdown-<%= playlist.id %>" data-dropdown class="hidden absolute right-0 z-50 mt-2 w-48 bg-white rounded-md ring-1 ring-black ring-opacity-5 shadow">
+              <div id="dropdown-<%= playlist.id %>" data-dropdown class="hidden absolute right-0 z-50 mt-2 w-48 bg-white rounded-md ring-1 ring-black ring-opacity-5 shadow dark:bg-stone-700">
                 <div class="py-1">
-                  <%= link_to 'View', playlist_path(playlist), class: "block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100" %>
-                  <%= link_to 'Edit', edit_playlist_path(playlist), class: "block px-4 py-2 text-sm text-stone-700 hover:bg-stone-100" %>
+                  <%= link_to 'View', playlist_path(playlist), class: "block px-4 py-2 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-600" %>
+                  <%= link_to 'Edit', edit_playlist_path(playlist), class: "block px-4 py-2 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-600" %>
                   <% if playlist.tracks.empty? %>
                     <%= button_to playlist_path(playlist), 
                                 method: :delete,
                                 class: "w-full text-left",
                                 form: { data: { turbo_confirm: "Are you sure?" } } do %>
-                      <span class="block px-4 py-2 text-sm text-red-600 hover:bg-stone-100">Delete</span>
+                      <span class="block px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-stone-100 dark:hover:bg-stone-600">Delete</span>
                     <% end %>
                   <% end %>
                 </div>
@@ -43,15 +43,15 @@
 
           <% if playlist.tracks.any? %>
             <div class="mt-4 space-y-2">
-              <h3 class="text-sm font-medium text-stone-700">Recent tracks:</h3>
+              <h3 class="text-sm font-medium text-stone-700 dark:text-stone-300">Recent tracks:</h3>
               <% playlist.tracks.order(created_at: :desc).limit(3).each do |track| %>
-                <div class="text-sm text-stone-600">
+                <div class="text-sm text-stone-600 dark:text-stone-400">
                   <%= track.artist %> - <%= track.track_title %>
                 </div>
               <% end %>
             </div>
           <% else %>
-            <p class="mt-4 text-sm italic text-stone-500">No tracks yet</p>
+            <p class="mt-4 text-sm italic text-stone-500 dark:text-stone-400">No tracks yet</p>
           <% end %>
         </div>
       </div>
