@@ -1,9 +1,10 @@
 <div class="bg-white rounded-lg shadow dark:bg-stone-800" id="<%= dom_id(track) %>">
   <%= render 'shared/youtube_player', track: track %>
   <div class="p-4">
-    <%= link_to track.track_title, track_path(track), class: "font-semibold truncate text-stone-900 dark:text-stone-100" %>
-    <p class="text-sm truncate text-stone-600 dark:text-stone-400"><%= track.artist %></p>
-    
+    <div class="truncate">
+      <%= link_to track.track_title, track_path(track), class: "font-semibold text-stone-900 dark:text-stone-100" %>
+      <p class="text-sm text-stone-600 dark:text-stone-400"><%= track.artist %></p>
+    </div>
     <div class="flex justify-between items-center mt-4">
       <span class="text-xs text-stone-500 dark:text-stone-400"><%= track.created_at.strftime('%Y-%m-%d') %></span>
       
