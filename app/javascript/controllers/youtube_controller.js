@@ -23,6 +23,10 @@ export default class extends Controller {
 
     // Add event listeners for the toggle and play/pause buttons
     document.getElementById('auto-play-toggle').addEventListener('click', this.toggleAutoPlay.bind(this));
+
+    // Expose players to global scope for debugging
+    window.youtubePlayers = this.players;
+    window.youtubeController = this;
   }
 
   playAudio(event) {
@@ -132,4 +136,18 @@ export default class extends Controller {
     toggleButton.textContent = this.autoPlayEnabled ? 'Auto-Play: ON' : 'Auto-Play: OFF';
   }
 
+  seekToPercentage(videoId, percentage) {
+    if (this.players[videoId]) {
+      const duration = this.players[videoId].getDuration();
+      const seekTime = (duration * percentage) / 100;
+      this.players[videoId].seekTo(seekTime, true);
+    }
+  }
 }
+
+// Expose the seekToPercentage method to the global scope
+window.seekToPercentage = function(videoId, percentage) {
+  if (window.youtubeController) {
+    window.youtubeController.seekToPercentage(videoId, percentage);
+  }
+};
