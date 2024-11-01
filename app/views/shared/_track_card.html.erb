@@ -26,6 +26,10 @@
                 <%= track.favorite ? 'Remove from Favorites' : 'Add to Favorites' %>
               </span>
             <% end %>
+            <%= link_to 'View on Youtube', "https://youtube.com/watch?v=#{track.youtube_id}", class: "block px-4 py-2 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-600" %>
+            <%= link_to 'View track on Discogs', "https://www.discogs.com/search?q=#{[track.artist, track.track_title].join(' ')}&type=all", class: "block px-4 py-2 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-600" %>
+            <%= link_to 'View artist on Discogs', "https://www.discogs.com/search/?q=#{track.artist}&type=artist", class: "block px-4 py-2 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-600" %>
+
           </div>
         </div>
       </div>
