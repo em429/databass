@@ -44,9 +44,6 @@ export default class extends Controller {
             if (event.data == YT.PlayerState.PLAYING) {
               this.updateProgressBar(videoId)
             } else if (event.data == YT.PlayerState.ENDED) {
-              console.log("Playing next track...")
-              console.log("Playing next track...")
-              console.log("Playing next track...")
               this.playNextTrack(videoId)
             } else {
               clearInterval(this.players[videoId].progressInterval)
