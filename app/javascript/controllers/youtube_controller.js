@@ -5,6 +5,7 @@ export default class extends Controller {
 
   players = {}
   tracks = []
+  autoPlayEnabled = true
 
   connect() {
     if (!window.YT) {
@@ -19,6 +20,9 @@ export default class extends Controller {
       videoId: this.getYoutubeId(el.dataset.youtubeUrl),
       element: el
     }));
+
+    // Add event listeners for the toggle and play/pause buttons
+    document.getElementById('auto-play-toggle').addEventListener('click', this.toggleAutoPlay.bind(this));
   }
 
   playAudio(event) {
@@ -44,7 +48,9 @@ export default class extends Controller {
             if (event.data == YT.PlayerState.PLAYING) {
               this.updateProgressBar(videoId)
             } else if (event.data == YT.PlayerState.ENDED) {
-              this.playNextTrack(videoId)
+              if (this.autoPlayEnabled) {
+                this.playNextTrack(videoId)
+              }
             } else {
               clearInterval(this.players[videoId].progressInterval)
             }
@@ -119,4 +125,11 @@ export default class extends Controller {
     const nextTrack = this.tracks[nextIndex];
     this.playAudio({ target: nextTrack.element });
   }
+
+  toggleAutoPlay() {
+    this.autoPlayEnabled = !this.autoPlayEnabled;
+    const toggleButton = document.getElementById('auto-play-toggle');
+    toggleButton.textContent = this.autoPlayEnabled ? 'Auto-Play: ON' : 'Auto-Play: OFF';
+  }
+
 }
