@@ -4,6 +4,7 @@ export default class extends Controller {
   static targets = ["thumbnail", "progress", "player", "playCount"]
 
   players = {}
+  tracks = []
 
   connect() {
     if (!window.YT) {
@@ -12,6 +13,12 @@ export default class extends Controller {
       const firstScriptTag = document.getElementsByTagName('script')[0]
       firstScriptTag.parentNode.insertBefore(tag, firstScriptTag)
     }
+
+    // Get the list of tracks from the DOM
+    this.tracks = Array.from(document.querySelectorAll('[data-youtube-url]')).map(el => ({
+      videoId: this.getYoutubeId(el.dataset.youtubeUrl),
+      element: el
+    }));
   }
 
   playAudio(event) {
@@ -36,6 +43,11 @@ export default class extends Controller {
           'onStateChange': (event) => {
             if (event.data == YT.PlayerState.PLAYING) {
               this.updateProgressBar(videoId)
+            } else if (event.data == YT.PlayerState.ENDED) {
+              console.log("Playing next track...")
+              console.log("Playing next track...")
+              console.log("Playing next track...")
+              this.playNextTrack(videoId)
             } else {
               clearInterval(this.players[videoId].progressInterval)
             }
@@ -102,5 +114,12 @@ export default class extends Controller {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
     const match = url.match(regExp)
     return (match && match[2].length === 11) ? match[2] : null
+  }
+
+  playNextTrack(currentVideoId) {
+    const currentIndex = this.tracks.findIndex(track => track.videoId === currentVideoId);
+    const nextIndex = (currentIndex + 1) % this.tracks.length;
+    const nextTrack = this.tracks[nextIndex];
+    this.playAudio({ target: nextTrack.element });
   }
 }
